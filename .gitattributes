@@ -1,0 +1,6 @@
+# Finales de línea LF en el repositorio (el equipo trabaja en Windows y Linux; CI corre en Linux)
+* text=auto eol=lf
+*.sh text eol=lf
+*.png binary
+*.jpg binary
+*.pdf binary
