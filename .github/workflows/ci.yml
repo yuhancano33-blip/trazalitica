@@ -1,0 +1,74 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  calidad:
+    name: Lint, unitarias y auditoría
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - name: Lint
+        run: npm run lint
+      - name: Formato
+        run: npm run format:check
+      - name: Pruebas unitarias
+        run: npm run test:unit
+      - name: Auditoría de dependencias
+        run: npm audit --audit-level=high
+      - name: La llave service_role no aparece en el frontend (Spec 7)
+        run: |
+          npm run build
+          if grep -rniE "service_role|SERVICE_ROLE_KEY" src/ index.html dist/; then
+            echo "::error::Referencia a service_role en el frontend o en el bundle"
+            exit 1
+          fi
+
+  base-datos:
+    name: Migraciones, RLS e integración
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - uses: supabase/setup-cli@v1
+        with:
+          version: latest
+      - name: Levantar Supabase local y aplicar migraciones
+        run: supabase start -x studio,imgproxy,edge-runtime,logflare,vector
+      - name: Variables de entorno de Supabase local
+        run: |
+          supabase status -o env \
+            --override-name api.url=SUPABASE_URL \
+            --override-name auth.anon_key=SUPABASE_ANON_KEY \
+            --override-name auth.service_role_key=SUPABASE_SERVICE_ROLE_KEY \
+            --override-name db.url=DATABASE_URL \
+            | sed 's/^\([A-Z_]*\)="\(.*\)"$/\1=\2/' >> "$GITHUB_ENV"
+      - name: Toda tabla de public tiene RLS
+        run: psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f scripts/check-rls.sql
+      - name: Pruebas de políticas RLS (pgTAP)
+        run: supabase test db
+      - name: Pruebas de integración
+        run: npm run test:integration
+      - name: Detener Supabase
+        if: always()
+        run: supabase stop --no-backup
