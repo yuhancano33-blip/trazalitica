@@ -29,7 +29,7 @@ Vue (store Pinia) → fetch /api/v1/... con Bearer token
 | ------------------------------------------------------ | ----------------------------------------------------- |
 | Tabla, función, trigger, política                      | `supabase/migrations/<timestamp>_<nombre>.sql`        |
 | Endpoint                                               | `server/routes/v1/<recurso>.routes.js`                |
-| Validación de entrada                                  | `server/schemas/<recurso>.schema.js` (Zod)            |
+| Validación de entrada                                  | `shared/schemas/<recurso>.schema.js` (Zod)            |
 | Regla de negocio (Kano, saliencia, máquina de estados) | `server/services/` como funciones puras               |
 | Pantalla                                               | `src/views/`; componentes en `src/components/<fase>/` |
 

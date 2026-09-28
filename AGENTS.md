@@ -37,17 +37,17 @@ api/index.js              Entrada serverless de Vercel (solo reexporta server/ap
 server/                   API Express
   app.js                  Monta middlewares globales y /api/v1
   routes/v1/              Un archivo por recurso: <recurso>.routes.js
-  schemas/                Esquemas Zod: <recurso>.schema.js (compartibles con el frontend)
   services/               Lógica de negocio pura (testeable sin HTTP)
   middlewares/            authenticate, requireProjectRole, validateBody, errorHandler
   lib/                    ApiError, utilidades transversales
+shared/schemas/           Esquemas Zod <recurso>.schema.js, usados por la API y el frontend (alias @shared)
 src/                      Frontend Vue
   components/<fase>/      nucleo, elicitacion, analisis, especificacion, validacion, metricas, auth, comun
   views/  stores/  router/  lib/
 supabase/                 config.toml, migrations/, seed.sql, tests/ (pgTAP)
 tests/                    unit/, integration/, e2e/
-scripts/                  gen-types.sh, check-rls.sql, seed-dev.js
-docs/                     specs/, adr/
+scripts/                  gen-types.sh, check-rls.sql, seed-dev.js, check-supabase.js
+docs/                     specs/, adr/, prompts/ (reglas-comunes.md: instrucciones para implementar cada spec)
 ```
 
 ## 4. Comandos
@@ -67,6 +67,7 @@ docs/                     specs/, adr/
 | Pruebas de integración (API contra Supabase local)            | `npm run test:integration`                       |
 | Pruebas de políticas RLS (pgTAP)                              | `npm run test:rls`                               |
 | Verificar que toda tabla de `public` tiene RLS                | `npm run check:rls`                              |
+| Verificar la conexión con Supabase (no imprime llaves)        | `npm run check:supabase`                         |
 | Pruebas e2e                                                   | `npm run test:e2e`                               |
 | Auditoría de dependencias                                     | `npm run audit`                                  |
 

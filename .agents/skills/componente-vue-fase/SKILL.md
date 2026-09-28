@@ -27,7 +27,7 @@ description: Crear un componente Vue 3 con <script setup>, Pinia y Tailwind, ubi
 | genérico | `src/components/comun/`          |
 
 3. Si necesita datos del servidor, crea o amplía el store de Pinia del dominio en `src/stores/`.
-4. Escribe el componente con la plantilla. Reutiliza el esquema Zod de `server/schemas/` para validar en el cliente.
+4. Escribe el componente con la plantilla. Reutiliza el esquema Zod de `shared/schemas/` (alias `@shared`) para validar en el cliente.
 5. Si es una vista con restricción de rol, añade la ruta con `meta: { requiresAuth: true, roles: [...] }`.
 6. Prueba con `@vue/test-utils` en `tests/unit/` si tiene lógica; flujo e2e en `tests/e2e/` si es crítico.
 7. `npm run lint && npm run test:unit`.
@@ -73,7 +73,7 @@ export const useStakeholdersStore = defineStore('stakeholders', () => {
 ```vue
 <script setup>
 import { reactive, ref } from 'vue';
-import { stakeholderSchema } from '../../../server/schemas/stakeholder.schema.js';
+import { stakeholderSchema } from '@shared/schemas/stakeholder.schema.js';
 import { useStakeholdersStore } from '@/stores/stakeholders';
 
 const props = defineProps({

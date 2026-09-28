@@ -26,6 +26,7 @@
     "db:reset": "supabase db reset",
     "db:migration": "supabase migration new",
     "db:types": "bash scripts/gen-types.sh",
+    "check:supabase": "node --env-file=.env scripts/check-supabase.js",
     "seed:dev": "node --env-file=.env scripts/seed-dev.js",
     "audit": "npm audit --audit-level=high"
   },

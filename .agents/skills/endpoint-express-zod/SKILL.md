@@ -13,7 +13,7 @@ description: Crear un endpoint REST de Express bajo /api/v1 con autenticación, 
 ## Pasos
 
 1. Toma de la spec: método, ruta, rol permitido, códigos de respuesta y criterios de aceptación.
-2. Esquema Zod en `server/schemas/<recurso>.schema.js`.
+2. Esquema Zod en `shared/schemas/<recurso>.schema.js`.
 3. Lógica pura en `server/services/<recurso>.service.js` + pruebas en `tests/unit/`.
 4. Ruta en `server/routes/v1/<recurso>.routes.js`; regístrala en `server/routes/v1/index.js`.
 5. Prueba de integración en `tests/integration/<recurso>.test.js`.
@@ -22,7 +22,7 @@ description: Crear un endpoint REST de Express bajo /api/v1 con autenticación, 
 
 ## Plantilla
 
-### Esquema — `server/schemas/stakeholder.schema.js`
+### Esquema — `shared/schemas/stakeholder.schema.js`
 
 ```js
 import { z } from 'zod';
@@ -56,7 +56,7 @@ import { authenticate } from '../../middlewares/authenticate.js';
 import { requireProjectRole } from '../../middlewares/require-project-role.js';
 import { validateBody } from '../../middlewares/validate-body.js';
 import { fromSupabaseError } from '../../lib/api-error.js';
-import { stakeholderSchema } from '../../schemas/stakeholder.schema.js';
+import { stakeholderSchema } from '../../../shared/schemas/stakeholder.schema.js';
 
 const router = Router();
 const EDITORES = ['lider_tecnico', 'analista_requisitos']; // matriz de permisos, Spec 8

@@ -1,7 +1,7 @@
 ---
 name: API Express
 description: Estructura de rutas, cadena de middlewares y manejo de errores en la API.
-globs: ['server/**/*.js', 'api/**/*.js', 'tests/integration/**']
+globs: ['server/**/*.js', 'api/**/*.js', 'shared/**/*.js', 'tests/integration/**']
 ---
 
 # API Express
@@ -12,9 +12,11 @@ Convenciones de rutas, errores y códigos HTTP: `AGENTS.md` §5. Plantilla compl
 
 ```
 server/routes/v1/<recurso>.routes.js   export default Router
-server/schemas/<recurso>.schema.js     esquemas Zod (.strict())
+shared/schemas/<recurso>.schema.js     esquemas Zod (.strict()), compartidos con el frontend
 server/services/<recurso>.service.js   lógica pura, sin req/res
 ```
+
+Los esquemas de `shared/schemas/` no importan nada de `server/` ni de `src/`: solo `zod`. La API los importa por ruta relativa; el frontend, con el alias `@shared`.
 
 Registrar el router en `server/routes/v1/index.js`. Rutas del proyecto: `/projects/:projectId/<recurso>` (kebab-case, plural).
 
